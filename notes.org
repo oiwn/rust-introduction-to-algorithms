@@ -3,3 +3,4 @@
 * notes
 ** make chapter 1 algos generic
 ** make it into library
+** test framework to generate different kind of inputs
