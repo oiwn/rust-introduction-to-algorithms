@@ -1,6 +1,27 @@
-// Two types of sort algorythms from chapter 2
+/// Two types of sort algorythms from chapter 2
 
-pub fn insertion_sort(array: &mut [i32]) {
+/// Sorts the elements of a mutable slice in ascending order using the insertion sort algorithm.
+///
+/// # Examples
+///
+/// ```
+/// let mut array = [5, 2, 4, 6, 1, 3];
+/// insertion_sort(&mut array);
+/// assert_eq!(array, [1, 2, 3, 4, 5, 6]);
+/// ```
+///
+/// # Parameters
+///
+/// * `array` - A mutable slice of elements to be sorted
+///
+/// # Type Parameters
+///
+/// * `T` - The type of the elements in the slice. `T` must implement
+/// the `PartialOrd` trait.
+pub fn insertion_sort<T>(array: &mut [T])
+where
+    T: PartialOrd,
+{
     // Insertion sort
     for i in 1..array.len() {
         let mut j = i;
@@ -11,7 +32,10 @@ pub fn insertion_sort(array: &mut [i32]) {
     }
 }
 
-fn merge(arr1: &[i32], arr2: &[i32], ret: &mut [i32]) {
+fn merge<T>(arr1: &[T], arr2: &[T], ret: &mut [T])
+where
+    T: PartialOrd + Copy,
+{
     // merge two arrays
     let mut left = 0;
     let mut right = 0;
@@ -37,7 +61,10 @@ fn merge(arr1: &[i32], arr2: &[i32], ret: &mut [i32]) {
     }
 }
 
-pub fn merge_sort(array: &mut [i32]) {
+pub fn merge_sort<T>(array: &mut [T])
+where
+    T: PartialOrd + Copy,
+{
     // merge sort
     let mid = array.len() / 2;
     if mid == 0 {
