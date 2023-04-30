@@ -4,3 +4,5 @@
 ** make chapter 1 algos generic
 ** make it into library
 ** test framework to generate different kind of inputs
+** 3rd edition and 4th editions are different
+split algos into the categories (as modules): sort, graph

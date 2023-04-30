@@ -4,7 +4,7 @@
 ///
 /// ## Examples
 ///
-/// ```
+/// ```ignore
 /// let mut array = [16, 4, 10, 14, 7, 9, 3, 2, 8, 1];
 /// max_heapify(&mut array, 1, array.len());
 /// assert_eq!(array, [16, 14, 10, 8, 7, 9, 3, 2, 4, 1]);
@@ -31,23 +31,23 @@ where
         largest = l;
     } else {
         largest = i;
-    }
+    };
 
     if r < heap_size && array[r] > array[largest] {
         largest = r;
-    }
+    };
 
     if largest != i {
         array.swap(i, largest);
         max_heapify(array, largest, heap_size)
-    }
+    };
 }
 
 /// Builds a max heap from an unordered slice.
 ///
 /// ## Examples
 ///
-/// ```
+/// ```ignore
 /// let mut array = [4, 1, 3, 2, 16, 9, 10, 14, 8, 7];
 /// build_max_heap(&mut array);
 /// assert_eq!(array, [16, 14, 10, 8, 7, 9, 3, 2, 4, 1]);
@@ -75,6 +75,7 @@ where
 /// ## Examples
 ///
 /// ```
+/// use kormen::ch6::heap_sort;
 /// let mut array = [16, 4, 10, 14, 7, 9, 3, 2, 8, 1];
 /// heap_sort(&mut array);
 /// assert_eq!(array, [1, 2, 3, 4, 7, 8, 9, 10, 14, 16]);

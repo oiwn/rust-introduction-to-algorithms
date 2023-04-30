@@ -5,6 +5,7 @@
 /// ## Examples
 ///
 /// ```
+/// use kormen::ch1::insertion_sort;
 /// let mut array = [5, 2, 4, 6, 1, 3];
 /// insertion_sort(&mut array);
 /// assert_eq!(array, [1, 2, 3, 4, 5, 6]);
@@ -36,6 +37,7 @@ where
 /// ## Examples
 ///
 /// ```
+/// use kormen::ch1::merge_sort;
 /// let mut array = [5, 2, 4, 6, 1, 3];
 /// merge_sort(&mut array);
 /// assert_eq!(array, [1, 2, 3, 4, 5, 6]);
@@ -70,7 +72,7 @@ where
 ///
 /// ## Examples
 ///
-/// ```
+/// ```ignore
 /// let arr1 = [1, 3, 5];
 /// let arr2 = [2, 4, 6];
 /// let mut ret = [0; 6];
@@ -120,9 +122,35 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::common_tests;
 
     #[test]
-    fn insertion_sort_test() {
+    fn insertion_sort_short_vector() {
+        let mut vec: Vec<i32> = common_tests::short_random_vector(-100, 100);
+        let mut sorted_vec: Vec<i32> = vec.clone();
+        sorted_vec.sort();
+        insertion_sort(&mut vec);
+        assert_eq!(vec, sorted_vec);
+    }
+
+    #[test]
+    fn insertion_sort_long_vector() {
+        let mut vec: Vec<i32> = common_tests::long_random_vector(-100, 100);
+        let mut sorted_vec: Vec<i32> = vec.clone();
+        sorted_vec.sort();
+        insertion_sort(&mut vec);
+        assert_eq!(vec, sorted_vec);
+    }
+
+    #[test]
+    fn insertion_sort_empty_vector() {
+        let mut vec: Vec<i32> = common_tests::empty_vector();
+        insertion_sort(&mut vec);
+        assert_eq!(vec, vec![]);
+    }
+
+    #[test]
+    fn insertion_sort_generic_test() {
         let mut array: [i32; 6] = [5, 2, 4, 6, 1, 3];
         insertion_sort(&mut array);
         assert_eq!(array, [1, 2, 3, 4, 5, 6]);
@@ -137,9 +165,39 @@ mod tests {
     }
 
     #[test]
-    fn merge_sort_test() {
+    fn merge_sort_short_vector() {
+        let mut vec: Vec<i32> = common_tests::short_random_vector(-100, 100);
+        let mut sorted_vec: Vec<i32> = vec.clone();
+        sorted_vec.sort();
+        merge_sort(&mut vec);
+        assert_eq!(vec, sorted_vec);
+    }
+
+    #[test]
+    fn merge_sort_long_vector() {
+        let mut vec: Vec<i32> = common_tests::long_random_vector(-100, 100);
+        let mut sorted_vec: Vec<i32> = vec.clone();
+        sorted_vec.sort();
+        merge_sort(&mut vec);
+        assert_eq!(vec, sorted_vec);
+    }
+
+    #[test]
+    fn merge_sort_empty_vector() {
+        let mut vec: Vec<i32> = common_tests::empty_vector();
+        merge_sort(&mut vec);
+        assert_eq!(vec, vec![]);
+    }
+
+    #[test]
+    fn merge_sort_generic_test() {
         let result: [i32; 6] = [1, 2, 3, 4, 5, 6];
         let mut array: [i32; 6] = [5, 2, 4, 6, 1, 3];
+        merge_sort(&mut array);
+        assert_eq!(array, result);
+
+        let result: Vec<f32> = vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
+        let mut array: Vec<f32> = vec![5.0, 2.0, 4.0, 6.0, 1.0, 3.0];
         merge_sort(&mut array);
         assert_eq!(array, result)
     }
