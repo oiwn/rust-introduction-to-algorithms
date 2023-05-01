@@ -1,11 +1,6 @@
 /// # Maximum subarray from chapter 4
 
-pub trait MinPossibleValue<T> {
-    fn get_min_possible_value() -> T;
-    fn get_zero() -> T;
-}
-
-fn find_max_crossing_subarray<T: MinPossibleValue<T>>(
+fn find_max_crossing_subarray<T>(
     array: &[T],
     low: usize,
     mid: usize,
@@ -15,42 +10,42 @@ where
     T: std::ops::Add<Output = T> + PartialOrd + Copy,
 {
     let mut max_left: usize = 0;
-    let mut max_righ: usize = 0;
+    let mut max_right: usize = 0;
 
-    let mut left_sum = T::get_min_possible_value();
-    let mut sum: T = T::get_zero();
-    for i in low..=mid {
-        sum = sum + array[i];
-        if sum > left_sum {
+    let mut left_sum: Option<T> = None;
+    let mut sum: Option<T> = None;
+    for i in (low..=mid).rev() {
+        sum = sum.map_or(Some(array[i]), |sum| Some(sum + array[i]));
+        if left_sum.is_none() || sum > left_sum {
             left_sum = sum;
             max_left = i;
         };
     }
 
-    let mut right_sum = T::get_min_possible_value();
-    let mut sum: T = T::get_zero();
-    for j in mid + 1..high {
-        sum = sum + array[j];
-        if sum > right_sum {
+    let mut right_sum: Option<T> = None;
+    let mut sum: Option<T> = None;
+    for j in mid + 1..=high {
+        sum = sum.map_or(Some(array[j]), |sum| Some(sum + array[j]));
+        if right_sum.is_none() || sum > right_sum {
             right_sum = sum;
-            max_righ = j;
+            max_right = j;
         };
     }
 
-    (max_left, max_righ, left_sum + right_sum)
+    (max_left, max_right, left_sum.unwrap() + right_sum.unwrap())
 }
 
-pub fn find_max_subarray<T: MinPossibleValue<T>>(
-    array: &mut [T],
+pub fn find_max_subarray<T>(
+    array: &[T],
     low: usize,
     high: usize,
 ) -> (usize, usize, T)
 where
-    T: std::ops::Add<Output = T> + PartialOrd + Copy,
+    T: std::ops::Add<Output = T> + PartialOrd + Copy + std::fmt::Debug,
 {
     if high == low {
         return (low, high, array[low]);
-    }
+    };
     let mid = (low + high) / 2;
 
     let (left_low, left_high, left_sum) = find_max_subarray(array, low, mid);
@@ -78,8 +73,9 @@ mod tests {
 
     #[test]
     fn fin_max_subarray() {
-        let result: [i32; 10] = [16, 14, 10, 8, 7, 9, 3, 2, 4, 1];
-        let mut array: [i32; 10] = [16, 4, 10, 14, 7, 9, 3, 2, 8, 1];
-        assert!(true);
+        let array: [i32; 16] = [
+            13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7,
+        ];
+        assert_eq!(find_max_subarray(&array, 0, 15), (7, 10, 43));
     }
 }
