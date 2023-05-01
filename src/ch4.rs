@@ -1,57 +1,41 @@
 /// # Maximum subarray from chapter 4
 
-pub trait NumericValues<T> {
-    fn get_zero() -> T;
-}
-
-fn find_max_crossing_subarray<T: NumericValues<T>>(
+fn find_max_crossing_subarray<T>(
     array: &[T],
     low: usize,
     mid: usize,
     high: usize,
 ) -> (usize, usize, T)
 where
-    T: std::ops::Add<Output = T> + PartialOrd + Copy + std::fmt::Debug,
+    T: std::ops::Add<Output = T> + PartialOrd + Copy,
 {
     let mut max_left: usize = 0;
     let mut max_right: usize = 0;
 
     let mut left_sum: Option<T> = None;
-    let mut sum: T = T::get_zero();
+    let mut sum: Option<T> = None;
     for i in (low..=mid).rev() {
-        println!(
-            "Left sum: {:?} Sum: {:?} array[i]: {:?}",
-            left_sum, sum, array[i]
-        );
-        sum = sum + array[i];
-        if left_sum.is_none() || Some(sum) > left_sum {
-            left_sum = Some(sum);
+        sum = sum.map_or(Some(array[i]), |sum| Some(sum + array[i]));
+        if left_sum.is_none() || sum > left_sum {
+            left_sum = sum;
             max_left = i;
         };
     }
 
     let mut right_sum: Option<T> = None;
-    let mut sum: T = T::get_zero();
+    let mut sum: Option<T> = None;
     for j in mid + 1..=high {
-        println!(
-            "Right sum: {:?} Sum: {:?} array[j]: {:?}",
-            left_sum, sum, array[j]
-        );
-        sum = sum + array[j];
-        if right_sum.is_none() || Some(sum) > right_sum {
-            right_sum = Some(sum);
+        sum = sum.map_or(Some(array[j]), |sum| Some(sum + array[j]));
+        if right_sum.is_none() || sum > right_sum {
+            right_sum = sum;
             max_right = j;
         };
     }
 
-    (
-        max_left,
-        max_right,
-        left_sum.unwrap_or(T::get_zero()) + right_sum.unwrap_or(T::get_zero()),
-    )
+    (max_left, max_right, left_sum.unwrap() + right_sum.unwrap())
 }
 
-pub fn find_max_subarray<T: NumericValues<T>>(
+pub fn find_max_subarray<T>(
     array: &[T],
     low: usize,
     high: usize,
@@ -65,24 +49,12 @@ where
     let mid = (low + high) / 2;
 
     let (left_low, left_high, left_sum) = find_max_subarray(array, low, mid);
-    println!(
-        "Left subarray: {:?} {:?} {:?}",
-        left_low, left_high, left_sum
-    );
 
     let (right_low, right_high, right_sum) =
         find_max_subarray(array, mid + 1, high);
-    println!(
-        "Right subarray: {:?} {:?} {:?}",
-        right_low, right_high, right_sum
-    );
 
     let (cross_low, cross_high, cross_sum) =
         find_max_crossing_subarray(array, low, mid, high);
-    println!(
-        "Cross subarray: {:?} {:?} {:?}",
-        cross_low, cross_high, cross_sum
-    );
 
     if left_sum > right_sum && left_sum > cross_sum {
         return (left_low, left_high, left_sum);
@@ -98,12 +70,6 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    impl NumericValues<i32> for i32 {
-        fn get_zero() -> i32 {
-            0
-        }
-    }
 
     #[test]
     fn fin_max_subarray() {
